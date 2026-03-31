@@ -98,6 +98,18 @@ site/index.html             (Site-wide table of contents)
 - ~200MB disk for the sentence-transformer model (downloaded on first run)
 - No API keys required — all embeddings are generated locally
 
+## ⚠️ Disclaimer
+
+This is **AI-generated proof-of-concept code**. It was built as a demonstration and, while it appears to work, it has not been rigorously tested for production use. No warranties are provided, express or implied.
+
+**By using this software you accept that:**
+- It is provided **as-is**, with no guarantee of correctness, completeness, or fitness for any particular purpose
+- The authors accept **no liability** for any damage, data loss, or other issues arising from its use
+- You are solely responsible for reviewing, testing, and validating the code before relying on it in any environment
+- It may contain bugs, security vulnerabilities, or unexpected behaviour
+
+**Use at your own risk.** If it breaks something, that's on you.
+
 ## License
 
 MIT
