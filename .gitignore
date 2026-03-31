@@ -6,7 +6,6 @@ test-run/
 # Sample/debug files
 debug_links.py
 readability.py
-accurx-web-how-to-navigate.*
 
 # Python
 __pycache__/
