@@ -538,6 +538,39 @@ def _run_heuristic_check(check_id, question, body, body_lower, stats, structure)
                 break
         return "pass", "All content is under headings."
 
+    if check_id in ("has_architecture_context",):
+        if re.search(r"(system|architecture|component|service|infra|platform|stack)", body_lower):
+            return "pass", "System/architecture context referenced."
+        return "warn", "No system-level context — explain where this fits."
+
+    if check_id in ("has_data_flow",):
+        if re.search(r"(data flow|integration|sync|sends? to|receives? from|connects? to|API|webhook)", body_lower):
+            return "pass", "Data flow or integration points described."
+        return "warn", "No data flow or integration description found."
+
+    if check_id in ("has_scalability_notes",):
+        if re.search(r"(scal|limit|maximum|capacity|throttl|rate limit|concurrent|performance)", body_lower):
+            return "pass", "Scale or capacity considerations mentioned."
+        return "info", "No scalability notes — may not be relevant."
+
+    if check_id in ("is_reassuring",):
+        reassuring = len(re.findall(r"\b(don.t worry|it.s (ok|okay|normal)|safely|securely|we.ll|help)\b", body_lower))
+        if reassuring >= 2:
+            return "pass", "Reassuring, supportive tone used."
+        if reassuring == 1:
+            return "warn", "Limited reassurance — consider adding supportive language."
+        return "warn", "No reassuring language found — may feel clinical to patients."
+
+    if check_id in ("has_help_contact",):
+        if re.search(r"(contact|support|help|call|phone|email us|get in touch|question)", body_lower):
+            return "pass", "Help/contact information provided."
+        return "warn", "No help contact or support guidance found."
+
+    if check_id in ("has_batch_guidance",):
+        if re.search(r"(batch|bulk|multiple|csv|list|import|export|all at once)", body_lower):
+            return "pass", "Batch/bulk operation guidance found."
+        return "info", "No batch guidance — may not be relevant for this article."
+
     return "info", f"'{check_id}' not automated — manual review needed."
 
 
@@ -1031,10 +1064,10 @@ def main():
     # Print summary
     badges = Counter(r["badge"] for r in results)
     print(f"\nSummary:")
-    print(f"  ✅ Good: {badges.get('good', 0)}")
-    print(f"  🟡 OK:   {badges.get('ok', 0)}")
-    print(f"  🟠 Warn: {badges.get('warn', 0)}")
-    print(f"  🔴 Bad:  {badges.get('bad', 0)}")
+    print(f"  Good: {badges.get('good', 0)}")
+    print(f"  OK:   {badges.get('ok', 0)}")
+    print(f"  Warn: {badges.get('warn', 0)}")
+    print(f"  Bad:  {badges.get('bad', 0)}")
 
 
 if __name__ == "__main__":

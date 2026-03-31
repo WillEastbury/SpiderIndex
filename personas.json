@@ -164,6 +164,98 @@
         "no_orphan_content": "Is all content under an appropriate heading?"
       },
       "domain_vocabulary": []
+    },
+    {
+      "id": "architect",
+      "name": "David Okonkwo",
+      "role": "Solutions Architect",
+      "icon": "🏗️",
+      "perspective": "Designs end-to-end system integrations and advises on deployment topology. Needs to understand how components connect, what the data flows look like, and where configuration boundaries sit. Evaluates docs for completeness of the technical picture.",
+      "priorities": ["system_context", "integration_clarity", "scalability", "deployment_topology"],
+      "readability": {
+        "max_grade": 18,
+        "ideal_grade": 14,
+        "max_fog": 20,
+        "ideal_fog": 16,
+        "max_words_per_sentence": 35,
+        "ideal_words_per_sentence": 22
+      },
+      "checks": {
+        "has_architecture_context": "Does the article explain where this feature sits within the wider system?",
+        "has_data_flow": "Are data flows or integration points described?",
+        "has_prerequisites": "Are dependencies, prerequisites, and environment requirements listed?",
+        "has_technical_detail": "Are configuration parameters and values explicitly documented?",
+        "has_error_guidance": "Are failure modes and recovery paths covered?",
+        "has_scalability_notes": "Are scale considerations or limits mentioned?",
+        "version_context": "Is version or environment context provided?"
+      },
+      "domain_vocabulary": [
+        "API", "endpoint", "architecture", "topology", "integration",
+        "microservice", "gateway", "load balancer", "firewall", "DNS",
+        "authentication", "OAuth", "SAML", "SSO", "certificate",
+        "deployment", "container", "scaling", "throughput", "latency",
+        "data flow", "pipeline", "middleware", "configuration", "environment"
+      ]
+    },
+    {
+      "id": "patient",
+      "name": "Margaret Thompson",
+      "role": "Patient / Service User",
+      "icon": "🧑‍🦳",
+      "perspective": "A patient who has received a text or email from their healthcare provider and needs to follow instructions. May not be confident with technology. Needs simple, reassuring language with no jargon. May be anxious about their health and easily confused by complex instructions.",
+      "priorities": ["simplicity", "reassurance", "no_jargon", "step_by_step", "accessibility"],
+      "readability": {
+        "max_grade": 8,
+        "ideal_grade": 6,
+        "max_fog": 10,
+        "ideal_fog": 8,
+        "max_words_per_sentence": 18,
+        "ideal_words_per_sentence": 12
+      },
+      "checks": {
+        "avoids_jargon": "Is clinical and technical jargon avoided or clearly explained?",
+        "has_step_by_step": "Are instructions presented as simple numbered steps?",
+        "addresses_user_directly": "Does the content use 'you' to speak directly to the reader?",
+        "has_screenshots": "Are visual guides provided to help navigate the interface?",
+        "is_reassuring": "Is the tone reassuring and supportive rather than clinical?",
+        "has_help_contact": "Is there a clear way to get help if something goes wrong?",
+        "mobile_readable": "Is the content easy to read on a mobile phone?"
+      },
+      "domain_vocabulary": [
+        "appointment", "doctor", "GP", "nurse", "hospital", "clinic",
+        "text message", "email", "link", "video call", "prescription"
+      ]
+    },
+    {
+      "id": "secretary",
+      "name": "Karen Mitchell",
+      "role": "Medical Secretary / Receptionist",
+      "icon": "📋",
+      "perspective": "Manages patient communications, appointment scheduling, and admin workflows. Needs clear, procedural documentation for daily tasks. Comfortable with the system but not technical. Processes high volumes and needs to work quickly without errors.",
+      "priorities": ["procedural_clarity", "efficiency", "error_prevention", "batch_operations"],
+      "readability": {
+        "max_grade": 12,
+        "ideal_grade": 8,
+        "max_fog": 14,
+        "ideal_fog": 10,
+        "max_words_per_sentence": 22,
+        "ideal_words_per_sentence": 16
+      },
+      "checks": {
+        "has_step_by_step": "Are tasks broken down into clear numbered steps?",
+        "has_screenshots": "Are screenshots provided for each key action?",
+        "has_quick_summary": "Is there a quick summary of what this feature does?",
+        "scannable": "Can the key steps be found by scanning headings alone?",
+        "has_clear_outcomes": "Is it clear what happens after each action is completed?",
+        "has_warnings": "Are common mistakes or important caveats highlighted?",
+        "has_batch_guidance": "For bulk operations, are batch/efficiency tips provided?",
+        "has_help_contact": "Is there guidance on what to do if something goes wrong?"
+      },
+      "domain_vocabulary": [
+        "patient", "appointment", "booking", "clinic", "referral",
+        "inbox", "message", "template", "batch", "list", "CSV",
+        "workspace", "team", "notification", "reminder", "schedule"
+      ]
     }
   ]
 }
