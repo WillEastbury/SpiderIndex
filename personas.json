@@ -23,10 +23,33 @@
         "scannable": "Can the key information be found by scanning headings alone?"
       },
       "domain_vocabulary": [
-        "patient", "consultation", "referral", "triage", "prescription",
-        "appointment", "questionnaire", "clinical", "diagnosis", "medication",
-        "GP", "NHS", "practitioner", "healthcare", "safeguarding",
-        "record", "inbox", "workspace", "template", "notification"
+        "patient", "patients", "consultation", "consultations", "consult",
+        "referral", "referrals", "refer", "triage", "triaging", "triaged",
+        "prescription", "prescriptions", "script", "rx", "meds",
+        "appointment", "appointments", "appt", "appts", "booking", "bookings",
+        "questionnaire", "questionnaires", "form", "forms", "proforma",
+        "clinical", "clinically", "diagnosis", "diagnoses", "dx",
+        "medication", "medications", "drug", "drugs", "dosage",
+        "GP", "general practitioner", "family doctor", "primary care",
+        "NHS", "national health service", "nhs.net", "nhs.uk",
+        "practitioner", "practitioners", "clinician", "clinicians",
+        "healthcare", "health care", "medical", "surgery", "practice",
+        "safeguarding", "vulnerable", "child protection",
+        "record", "records", "medical record", "patient record", "EPR", "EHR",
+        "inbox", "inboxes", "message", "messages", "SMS", "text", "texts",
+        "workspace", "workspaces", "organisation", "organisations", "org",
+        "template", "templates", "macro", "macros", "snippet", "snippets",
+        "notification", "notifications", "alert", "alerts", "reminder", "reminders",
+        "EMIS", "SystmOne", "S1", "Vision", "TPP", "Cegedim",
+        "SNOMED", "Read code", "CTV3", "ICD-10",
+        "discharge", "follow-up", "follow up", "review",
+        "laboratory", "lab", "labs", "pathology", "blood test", "bloods",
+        "radiology", "x-ray", "xray", "imaging", "scan",
+        "physiotherapy", "physio", "occupational therapy", "OT",
+        "mental health", "IAPT", "CAMHS", "psychiatry",
+        "diabetes", "hypertension", "asthma", "COPD", "epilepsy",
+        "vaccination", "vaccine", "immunisation", "immunization", "jab",
+        "NHS number", "DOB", "date of birth", "postcode"
       ]
     },
     {
@@ -52,9 +75,27 @@
         "time_efficient": "Can the task be completed from these instructions in under 2 minutes?"
       },
       "domain_vocabulary": [
-        "patient", "consultation", "referral", "triage", "theatre",
-        "ward", "clinical", "secondary care", "discharge", "pathway",
-        "record view", "NHS", "practitioner", "healthcare", "specialist"
+        "patient", "patients", "consultation", "consultations", "consult",
+        "referral", "referrals", "refer", "triage", "triaging",
+        "theatre", "theatres", "operating theatre", "OR", "operating room",
+        "ward", "wards", "bay", "bedside", "inpatient", "outpatient",
+        "clinical", "clinically", "secondary care", "tertiary care",
+        "discharge", "discharges", "TTO", "TTA", "to take out",
+        "pathway", "pathways", "care pathway", "clinical pathway",
+        "record view", "medical record", "EPR", "EHR", "PAS",
+        "NHS", "national health service", "trust", "hospital trust",
+        "practitioner", "practitioners", "consultant", "registrar", "SHO",
+        "healthcare", "health care", "specialist", "specialists",
+        "handover", "handovers", "MDT", "multidisciplinary",
+        "pre-op", "post-op", "perioperative", "anaesthetic", "anaesthesia",
+        "biopsy", "histology", "pathology", "radiology", "imaging",
+        "EMIS", "SystmOne", "S1", "Cerner", "Epic", "Lorenzo",
+        "ICU", "ITU", "HDU", "A&E", "ED", "emergency department",
+        "SNOMED", "ICD-10", "OPCS", "procedure code",
+        "consent", "informed consent", "capacity", "competence",
+        "urgent", "emergency", "elective", "semi-elective",
+        "diagnosis", "diagnoses", "differential", "dx",
+        "prescription", "prescriptions", "medication", "drug chart"
       ]
     },
     {
@@ -80,10 +121,27 @@
         "has_troubleshooting": "Are common failure modes and their resolutions documented?"
       },
       "domain_vocabulary": [
-        "governance", "compliance", "RBAC", "audit", "configuration",
-        "deployment", "integration", "interoperability", "SNOMED", "HL7",
-        "EPR", "EMIS", "SystmOne", "firewall", "authentication",
-        "workspace", "admin", "organisation", "security", "data"
+        "governance", "information governance", "IG", "clinical governance",
+        "compliance", "compliant", "regulatory", "regulation",
+        "RBAC", "role-based access", "access control", "permissions", "privilege",
+        "audit", "audit trail", "audit log", "logging", "accountability",
+        "configuration", "config", "settings", "setup", "provisioning",
+        "deployment", "deploy", "rollout", "roll-out", "go-live",
+        "integration", "integrated", "interoperability", "interop",
+        "SNOMED", "HL7", "FHIR", "HL7v2", "CDA", "openEHR",
+        "EPR", "EHR", "electronic patient record", "electronic health record",
+        "EMIS", "SystmOne", "S1", "Vision", "TPP", "Cegedim", "Cerner", "Epic",
+        "firewall", "proxy", "whitelist", "allowlist", "IP address",
+        "authentication", "auth", "MFA", "2FA", "two-factor", "SSO", "single sign-on",
+        "workspace", "workspaces", "organisation", "organisations", "org",
+        "admin", "administrator", "superuser", "manager", "owner",
+        "organisation", "trust", "CCG", "ICB", "ICS", "PCN", "federation",
+        "security", "secure", "encrypted", "encryption", "TLS", "SSL", "HTTPS",
+        "data", "dataset", "data protection", "DPA", "GDPR", "DPIA",
+        "Caldicott", "Caldicott guardian", "SIRO", "DPO", "data controller",
+        "clinical safety", "DCB0129", "DCB0160", "DTAC", "NHS Digital",
+        "risk assessment", "risk register", "incident", "breach",
+        "backup", "disaster recovery", "DR", "business continuity", "BCP"
       ]
     },
     {
@@ -109,10 +167,29 @@
         "is_version_specific": "Are version-specific differences clearly noted?"
       },
       "domain_vocabulary": [
-        "API", "endpoint", "configuration", "parameter", "authentication",
-        "token", "firewall", "port", "DNS", "SSL", "certificate",
-        "integration", "webhook", "payload", "JSON", "XML",
-        "deployment", "rollback", "troubleshooting", "log", "debug"
+        "API", "APIs", "REST", "RESTful", "GraphQL", "SOAP", "RPC",
+        "endpoint", "endpoints", "route", "routes", "URL", "URI",
+        "configuration", "config", "env", "environment variable", ".env",
+        "parameter", "parameters", "param", "params", "argument", "args",
+        "authentication", "auth", "OAuth", "OAuth2", "OIDC", "SAML",
+        "token", "tokens", "JWT", "bearer token", "API key", "secret",
+        "firewall", "proxy", "reverse proxy", "load balancer", "WAF",
+        "port", "ports", "socket", "TCP", "UDP", "HTTP", "HTTPS",
+        "DNS", "CNAME", "A record", "hostname", "FQDN",
+        "SSL", "TLS", "certificate", "cert", "CA", "PKI",
+        "integration", "integrations", "middleware", "adapter", "connector",
+        "webhook", "webhooks", "callback", "event", "events", "trigger",
+        "payload", "request body", "response body", "header", "headers",
+        "JSON", "XML", "YAML", "CSV", "schema", "validation",
+        "deployment", "deploy", "CI/CD", "pipeline", "build", "release",
+        "rollback", "revert", "migration", "upgrade", "downgrade",
+        "troubleshooting", "debug", "debugging", "stack trace", "traceback",
+        "log", "logs", "logging", "stdout", "stderr", "verbose",
+        "SDK", "CLI", "library", "package", "module", "dependency",
+        "Docker", "container", "Kubernetes", "K8s", "pod", "helm",
+        "Azure", "AWS", "GCP", "cloud", "SaaS", "PaaS", "IaaS",
+        "database", "DB", "SQL", "NoSQL", "Redis", "Postgres", "MongoDB",
+        "cron", "scheduler", "queue", "async", "synchronous", "polling"
       ]
     },
     {
@@ -138,7 +215,25 @@
         "avoids_jargon": "Is unnecessary jargon avoided or explained on first use?",
         "positive_framing": "Are instructions framed positively (do X) rather than negatively (don't do Y)?"
       },
-      "domain_vocabulary": []
+      "domain_vocabulary": [
+        "tone", "tone of voice", "voice", "brand voice", "editorial",
+        "plain language", "plain English", "readability", "readable",
+        "user", "users", "reader", "readers", "audience",
+        "heading", "headings", "subheading", "title", "headline",
+        "paragraph", "sentence", "clause", "phrase",
+        "active voice", "passive voice", "imperative", "directive",
+        "call to action", "CTA", "prompt", "instruction",
+        "template", "templates", "boilerplate", "standard copy",
+        "terminology", "glossary", "definition", "jargon",
+        "empathy", "empathetic", "supportive", "reassuring",
+        "concise", "conciseness", "brevity", "succinct", "wordy",
+        "scannable", "skim", "skimmable", "at a glance",
+        "accessibility", "accessible", "inclusive", "WCAG",
+        "style guide", "editorial guide", "content standard",
+        "microcopy", "UX writing", "UX copy", "interface text",
+        "error message", "confirmation", "tooltip", "label",
+        "onboarding", "walkthrough", "tutorial", "guide"
+      ]
     },
     {
       "id": "qa",
@@ -163,7 +258,23 @@
         "is_screen_reader_friendly": "Would this content make sense when read linearly by a screen reader?",
         "no_orphan_content": "Is all content under an appropriate heading?"
       },
-      "domain_vocabulary": []
+      "domain_vocabulary": [
+        "accessibility", "accessible", "a11y", "WCAG", "WCAG 2.1", "WCAG 2.2",
+        "screen reader", "JAWS", "NVDA", "VoiceOver", "TalkBack",
+        "alt text", "alt attribute", "alternative text", "image description",
+        "heading", "headings", "h1", "h2", "h3", "heading level", "hierarchy",
+        "semantic", "semantics", "landmark", "ARIA", "aria-label", "role",
+        "focus", "focus order", "tab order", "keyboard navigation", "tabindex",
+        "contrast", "colour contrast", "color contrast", "ratio",
+        "link text", "anchor text", "descriptive link", "click here",
+        "responsive", "mobile", "viewport", "breakpoint",
+        "validation", "validate", "lint", "linter", "spell check",
+        "broken link", "dead link", "404", "redirect", "HTTP status",
+        "consistency", "consistent", "formatting", "format",
+        "regression", "regression test", "smoke test", "sanity check",
+        "cross-browser", "browser compatibility", "Chrome", "Firefox", "Safari", "Edge",
+        "PDF", "document", "export", "print", "print-friendly"
+      ]
     },
     {
       "id": "architect",
@@ -190,11 +301,31 @@
         "version_context": "Is version or environment context provided?"
       },
       "domain_vocabulary": [
-        "API", "endpoint", "architecture", "topology", "integration",
-        "microservice", "gateway", "load balancer", "firewall", "DNS",
-        "authentication", "OAuth", "SAML", "SSO", "certificate",
-        "deployment", "container", "scaling", "throughput", "latency",
-        "data flow", "pipeline", "middleware", "configuration", "environment"
+        "API", "APIs", "REST", "RESTful", "GraphQL", "SOAP", "gRPC",
+        "endpoint", "endpoints", "service", "services", "microservice", "microservices",
+        "architecture", "architectural", "system design", "solution design",
+        "topology", "network topology", "deployment topology",
+        "gateway", "API gateway", "reverse proxy", "ingress", "egress",
+        "load balancer", "load balancing", "ALB", "NLB", "traffic manager",
+        "firewall", "WAF", "NSG", "security group", "ACL",
+        "DNS", "CNAME", "A record", "DNS zone", "domain", "subdomain",
+        "authentication", "auth", "OAuth", "OAuth2", "OIDC", "SAML", "SSO",
+        "certificate", "cert", "TLS", "SSL", "mTLS", "PKI", "CA",
+        "deployment", "deploy", "release", "rollout", "canary", "blue-green",
+        "container", "Docker", "Kubernetes", "K8s", "pod", "helm", "AKS", "EKS",
+        "scaling", "autoscale", "horizontal scaling", "vertical scaling",
+        "throughput", "latency", "SLA", "SLO", "SLI", "uptime", "availability",
+        "data flow", "data pipeline", "ETL", "ELT", "streaming", "batch",
+        "middleware", "message broker", "queue", "Kafka", "RabbitMQ", "Service Bus",
+        "configuration", "config", "environment", "env", "infrastructure",
+        "IaC", "Terraform", "ARM template", "Bicep", "CloudFormation",
+        "monitoring", "observability", "telemetry", "metrics", "tracing",
+        "Azure", "AWS", "GCP", "cloud", "multi-cloud", "hybrid",
+        "VNet", "VPC", "subnet", "peering", "ExpressRoute", "VPN",
+        "database", "DB", "SQL", "NoSQL", "Cosmos DB", "Postgres", "Redis",
+        "CDN", "caching", "cache", "blob storage", "object storage", "S3",
+        "disaster recovery", "DR", "failover", "redundancy", "HA", "high availability",
+        "CI/CD", "pipeline", "DevOps", "GitOps", "infrastructure as code"
       ]
     },
     {
@@ -222,8 +353,30 @@
         "mobile_readable": "Is the content easy to read on a mobile phone?"
       },
       "domain_vocabulary": [
-        "appointment", "doctor", "GP", "nurse", "hospital", "clinic",
-        "text message", "email", "link", "video call", "prescription"
+        "appointment", "appointments", "appt", "booking", "bookings",
+        "doctor", "doctors", "Dr", "doc",
+        "GP", "general practitioner", "family doctor", "my doctor",
+        "nurse", "nurses", "practice nurse", "district nurse",
+        "hospital", "hospitals", "clinic", "clinics", "surgery", "surgeries",
+        "text message", "text", "texts", "SMS", "message", "messages",
+        "email", "emails", "e-mail",
+        "link", "links", "web link", "URL",
+        "video call", "video consultation", "video chat", "virtual appointment",
+        "prescription", "prescriptions", "repeat prescription", "script", "meds",
+        "NHS", "NHS number", "health service",
+        "NHS App", "NHS login", "NHS account",
+        "waiting list", "wait", "waiting",
+        "test", "tests", "blood test", "bloods", "results", "test results",
+        "referral", "referred", "specialist", "consultant",
+        "vaccination", "vaccine", "jab", "booster", "immunisation",
+        "questionnaire", "form", "survey", "questions",
+        "photo", "photos", "picture", "image", "attachment",
+        "password", "log in", "login", "sign in", "sign up", "register",
+        "mobile", "phone", "smartphone", "tablet", "device",
+        "download", "install", "app", "application",
+        "help", "support", "contact", "call", "phone number",
+        "privacy", "data", "personal information", "consent",
+        "cancel", "reschedule", "change", "update"
       ]
     },
     {
@@ -252,9 +405,30 @@
         "has_help_contact": "Is there guidance on what to do if something goes wrong?"
       },
       "domain_vocabulary": [
-        "patient", "appointment", "booking", "clinic", "referral",
-        "inbox", "message", "template", "batch", "list", "CSV",
-        "workspace", "team", "notification", "reminder", "schedule"
+        "patient", "patients", "service user", "client",
+        "appointment", "appointments", "appt", "appts", "slot", "slots",
+        "booking", "bookings", "book", "rebook", "reschedule",
+        "clinic", "clinics", "clinic list", "clinic session",
+        "referral", "referrals", "refer", "onward referral",
+        "inbox", "inboxes", "tray", "in-tray",
+        "message", "messages", "SMS", "text", "texts", "email", "emails",
+        "template", "templates", "standard letter", "pro forma", "proforma",
+        "batch", "batch message", "bulk", "bulk send", "mail merge",
+        "list", "lists", "patient list", "waiting list", "clinic list",
+        "CSV", "spreadsheet", "Excel", "import", "export", "upload", "download",
+        "workspace", "workspaces", "team", "teams", "department",
+        "notification", "notifications", "alert", "alerts", "flag",
+        "reminder", "reminders", "appointment reminder", "recall",
+        "schedule", "scheduling", "diary", "rota", "calendar",
+        "registration", "register", "check-in", "check in", "arrival",
+        "discharge", "discharge letter", "clinic letter", "outcome",
+        "filing", "file", "attach", "attachment", "document", "scan",
+        "telephone", "phone", "call", "switchboard", "reception",
+        "admin", "administration", "clerical", "secretarial",
+        "NHS number", "DOB", "date of birth", "postcode", "address",
+        "consent", "opt-out", "dissent", "GDPR", "data protection",
+        "archive", "archived", "delete", "remove", "deactivate",
+        "manager", "supervisor", "line manager", "practice manager"
       ]
     }
   ]
