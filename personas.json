@@ -1,0 +1,169 @@
+{
+  "personas": [
+    {
+      "id": "clinician",
+      "name": "Dr. Sarah Chen",
+      "role": "General Practitioner",
+      "icon": "🩺",
+      "perspective": "Busy GP using the system between patient consultations. Needs to find answers in under 30 seconds. Familiar with medical terminology but not technical jargon.",
+      "priorities": ["speed_of_comprehension", "actionable_steps", "clinical_terminology_ok"],
+      "readability": {
+        "max_grade": 14,
+        "ideal_grade": 10,
+        "max_fog": 16,
+        "ideal_fog": 12,
+        "max_words_per_sentence": 28,
+        "ideal_words_per_sentence": 18
+      },
+      "checks": {
+        "has_quick_summary": "Does the article have a clear summary or overview at the top?",
+        "has_step_by_step": "Are instructions presented as numbered steps rather than prose?",
+        "has_screenshots": "Are screenshots provided for UI-based tasks?",
+        "jargon_level": "Is non-clinical technical jargon minimised?",
+        "scannable": "Can the key information be found by scanning headings alone?"
+      },
+      "domain_vocabulary": [
+        "patient", "consultation", "referral", "triage", "prescription",
+        "appointment", "questionnaire", "clinical", "diagnosis", "medication",
+        "GP", "NHS", "practitioner", "healthcare", "safeguarding",
+        "record", "inbox", "workspace", "template", "notification"
+      ]
+    },
+    {
+      "id": "surgeon",
+      "name": "Mr. James Okafor",
+      "role": "Consultant Surgeon",
+      "icon": "🔪",
+      "perspective": "Time-critical secondary care specialist. Needs precise, unambiguous instructions. Accustomed to dense clinical language but intolerant of waffle. Often accessing docs from a theatre or ward.",
+      "priorities": ["precision", "brevity", "unambiguous_instructions", "mobile_friendly"],
+      "readability": {
+        "max_grade": 16,
+        "ideal_grade": 12,
+        "max_fog": 18,
+        "ideal_fog": 14,
+        "max_words_per_sentence": 30,
+        "ideal_words_per_sentence": 20
+      },
+      "checks": {
+        "is_concise": "Is the article free of unnecessary filler or repetition?",
+        "has_clear_outcomes": "Does each section clearly state what happens as a result?",
+        "mobile_readable": "Would this be readable on a mobile device without horizontal scrolling?",
+        "has_warnings": "Are important caveats or warnings clearly highlighted?",
+        "time_efficient": "Can the task be completed from these instructions in under 2 minutes?"
+      },
+      "domain_vocabulary": [
+        "patient", "consultation", "referral", "triage", "theatre",
+        "ward", "clinical", "secondary care", "discharge", "pathway",
+        "record view", "NHS", "practitioner", "healthcare", "specialist"
+      ]
+    },
+    {
+      "id": "specialist",
+      "name": "Dr. Priya Patel",
+      "role": "Clinical Informatics Lead",
+      "icon": "📊",
+      "perspective": "Clinician with IT oversight responsibilities. Evaluates documentation for governance, compliance, and rollout suitability. Needs to understand both clinical workflow and technical configuration.",
+      "priorities": ["completeness", "governance_compliance", "rollout_readiness", "configuration_detail"],
+      "readability": {
+        "max_grade": 16,
+        "ideal_grade": 12,
+        "max_fog": 18,
+        "ideal_fog": 14,
+        "max_words_per_sentence": 30,
+        "ideal_words_per_sentence": 20
+      },
+      "checks": {
+        "covers_prerequisites": "Are prerequisites and dependencies clearly listed?",
+        "has_ig_considerations": "Are information governance and data security implications mentioned?",
+        "has_role_clarity": "Is it clear who should perform each action (admin, user, IT)?",
+        "version_context": "Is it clear which product version or environment this applies to?",
+        "has_troubleshooting": "Are common failure modes and their resolutions documented?"
+      },
+      "domain_vocabulary": [
+        "governance", "compliance", "RBAC", "audit", "configuration",
+        "deployment", "integration", "interoperability", "SNOMED", "HL7",
+        "EPR", "EMIS", "SystmOne", "firewall", "authentication",
+        "workspace", "admin", "organisation", "security", "data"
+      ]
+    },
+    {
+      "id": "developer",
+      "name": "Alex Rivera",
+      "role": "Integration Developer",
+      "icon": "💻",
+      "perspective": "Technical integrator working with APIs and system configuration. Expects precise technical detail, code examples, and clear parameter documentation. Frustrated by ambiguity.",
+      "priorities": ["technical_accuracy", "code_examples", "api_detail", "error_handling"],
+      "readability": {
+        "max_grade": 18,
+        "ideal_grade": 14,
+        "max_fog": 20,
+        "ideal_fog": 16,
+        "max_words_per_sentence": 35,
+        "ideal_words_per_sentence": 22
+      },
+      "checks": {
+        "has_technical_detail": "Are configuration parameters and values explicitly documented?",
+        "has_examples": "Are worked examples or code snippets provided?",
+        "has_error_guidance": "Are error states and their resolutions covered?",
+        "has_prerequisites": "Are system requirements and dependencies listed?",
+        "is_version_specific": "Are version-specific differences clearly noted?"
+      },
+      "domain_vocabulary": [
+        "API", "endpoint", "configuration", "parameter", "authentication",
+        "token", "firewall", "port", "DNS", "SSL", "certificate",
+        "integration", "webhook", "payload", "JSON", "XML",
+        "deployment", "rollback", "troubleshooting", "log", "debug"
+      ]
+    },
+    {
+      "id": "copywriter",
+      "name": "Emma Liu",
+      "role": "Content & UX Writer",
+      "icon": "✍️",
+      "perspective": "Reviews documentation for tone, clarity, consistency, and brand alignment. Focuses on whether content empowers users and follows plain language principles.",
+      "priorities": ["tone_consistency", "plain_language", "user_empowerment", "brand_voice"],
+      "readability": {
+        "max_grade": 8,
+        "ideal_grade": 6,
+        "max_fog": 10,
+        "ideal_fog": 8,
+        "max_words_per_sentence": 20,
+        "ideal_words_per_sentence": 15
+      },
+      "checks": {
+        "uses_active_voice": "Is active voice used consistently throughout?",
+        "addresses_user_directly": "Does the content use 'you' to address the reader?",
+        "consistent_terminology": "Is terminology consistent (no mixing synonyms for the same concept)?",
+        "has_clear_cta": "Does each section end with a clear next action or outcome?",
+        "avoids_jargon": "Is unnecessary jargon avoided or explained on first use?",
+        "positive_framing": "Are instructions framed positively (do X) rather than negatively (don't do Y)?"
+      },
+      "domain_vocabulary": []
+    },
+    {
+      "id": "qa",
+      "name": "Jordan Blake",
+      "role": "QA & Accessibility Tester",
+      "icon": "🔍",
+      "perspective": "Tests documentation for structural quality, accessibility compliance, link integrity, and consistency. Ensures content meets WCAG 2.1 AA standards.",
+      "priorities": ["accessibility", "structural_integrity", "link_validity", "consistency"],
+      "readability": {
+        "max_grade": 12,
+        "ideal_grade": 8,
+        "max_fog": 14,
+        "ideal_fog": 10,
+        "max_words_per_sentence": 25,
+        "ideal_words_per_sentence": 18
+      },
+      "checks": {
+        "images_have_alt": "Do all images have meaningful alt text?",
+        "heading_hierarchy": "Do headings follow a logical h1→h2→h3 hierarchy without skipping?",
+        "links_are_descriptive": "Do all links have descriptive text (no 'click here')?",
+        "has_consistent_formatting": "Is formatting consistent (lists, bold, headings used the same way)?",
+        "is_screen_reader_friendly": "Would this content make sense when read linearly by a screen reader?",
+        "no_orphan_content": "Is all content under an appropriate heading?"
+      },
+      "domain_vocabulary": []
+    }
+  ]
+}

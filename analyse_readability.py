@@ -4,8 +4,12 @@ analyse_readability.py — Analyse all Markdown files in a directory for
 readability and accessibility, then generate a comprehensive HTML report
 with per-document scores, recommendations, and a site-wide summary.
 
+Each document is reviewed by configurable reviewer personas (loaded from
+personas.json), each applying their own readability thresholds and
+domain-specific checks.
+
 Usage:
-    python analyse_readability.py [--input-dir DIR] [--output FILE]
+    python analyse_readability.py [--input-dir DIR] [--output FILE] [--personas FILE]
 
 Reads YAML frontmatter to determine the target audience for each document
 and adjusts scoring thresholds accordingly.
@@ -307,6 +311,236 @@ def generate_recommendations(stats: dict, structure: dict, profile: dict) -> lis
     return recs
 
 
+# ── Persona-based reviews ─────────────────────────────────────
+
+def load_personas(path: str | Path) -> list[dict]:
+    """Load reviewer personas from a JSON file."""
+    p = Path(path)
+    if not p.exists():
+        print(f"  Warning: personas file {p} not found, skipping persona reviews")
+        return []
+    with open(p, encoding="utf-8") as f:
+        data = json.load(f)
+    return data.get("personas", [])
+
+
+def persona_review(persona: dict, stats: dict, structure: dict, body: str) -> list[dict]:
+    """Run a single persona's checks against a document, returning findings."""
+    findings = []
+    if stats.get("empty"):
+        findings.append({"check": "content", "status": "fail",
+                         "note": "Document has no readable content."})
+        return findings
+
+    p_read = persona.get("readability", {})
+    checks = persona.get("checks", {})
+
+    # Readability checks against this persona's thresholds
+    fk = stats["fk_grade"]
+    max_g = p_read.get("max_grade", 14)
+    ideal_g = p_read.get("ideal_grade", 10)
+    if fk > max_g:
+        findings.append({"check": "grade_level", "status": "fail",
+            "note": f"Grade level {fk} exceeds max {max_g} for this reader."})
+    elif fk > ideal_g:
+        findings.append({"check": "grade_level", "status": "warn",
+            "note": f"Grade level {fk} is above ideal {ideal_g}."})
+    else:
+        findings.append({"check": "grade_level", "status": "pass",
+            "note": f"Grade level {fk} is appropriate."})
+
+    aws = stats["avg_words_per_sentence"]
+    max_aws = p_read.get("max_words_per_sentence", 25)
+    ideal_aws = p_read.get("ideal_words_per_sentence", 18)
+    if aws > max_aws:
+        findings.append({"check": "sentence_length", "status": "fail",
+            "note": f"Avg {aws} words/sentence exceeds max {max_aws}."})
+    elif aws > ideal_aws:
+        findings.append({"check": "sentence_length", "status": "warn",
+            "note": f"Avg {aws} words/sentence is above ideal {ideal_aws}."})
+    else:
+        findings.append({"check": "sentence_length", "status": "pass",
+            "note": f"Avg {aws} words/sentence is good."})
+
+    # Passive voice
+    if stats["passive_count"] > 5:
+        findings.append({"check": "passive_voice", "status": "warn",
+            "note": f"{stats['passive_count']} passive constructions detected."})
+    else:
+        findings.append({"check": "passive_voice", "status": "pass",
+            "note": f"Low passive voice usage ({stats['passive_count']})."})
+
+    body_lower = body.lower()
+
+    # Run persona-specific checks by heuristic
+    for check_id, check_question in checks.items():
+        status, note = _run_heuristic_check(check_id, check_question, body, body_lower, stats, structure)
+        findings.append({"check": check_id, "status": status, "note": note})
+
+    return findings
+
+
+def _run_heuristic_check(check_id, question, body, body_lower, stats, structure):
+    """Run a heuristic check and return (status, note)."""
+
+    if check_id in ("has_quick_summary",):
+        if re.search(r"^#{1,3}\s*(overview|summary|introduction|about)", body, re.I | re.M):
+            return "pass", "Document has a summary/overview section."
+        return "warn", "No clear summary or overview section at the top."
+
+    if check_id in ("has_step_by_step",):
+        if re.search(r"^\d+[\.\)]\s", body, re.M):
+            return "pass", "Numbered step-by-step instructions found."
+        if re.search(r"^[-*]\s", body, re.M):
+            return "warn", "Bullet lists found, but no numbered steps."
+        return "warn", "No step-by-step instructions detected."
+
+    if check_id in ("has_screenshots",):
+        n = structure.get("images_total", 0)
+        if n >= 2: return "pass", f"{n} images/screenshots present."
+        if n == 1: return "warn", "Only 1 image — consider adding more."
+        return "warn", "No screenshots found."
+
+    if check_id in ("jargon_level", "avoids_jargon"):
+        pct = stats.get("domain_complex_pct", 0)
+        if pct <= 5: return "pass", f"Low non-domain jargon ({pct}%)."
+        if pct <= 10: return "warn", f"Moderate jargon ({pct}% non-domain complex words)."
+        return "fail", f"High jargon ({pct}% non-domain complex words)."
+
+    if check_id in ("scannable",):
+        h = structure.get("headings_total", 0)
+        wc = stats.get("word_count", 0)
+        if wc > 200 and h < 2: return "warn", f"Only {h} heading(s) for {wc} words."
+        return "pass", f"{h} headings for {wc} words — good scannability."
+
+    if check_id in ("is_concise",):
+        aws = stats["avg_words_per_sentence"]
+        if aws <= 20: return "pass", "Writing is concise."
+        if aws <= 28: return "warn", f"Avg sentence length ({aws}) could be tighter."
+        return "fail", f"Avg sentence length ({aws}) — needs trimming."
+
+    if check_id in ("has_clear_outcomes",):
+        n = len(re.findall(r"\b(will|should|this means|as a result|you'll see)\b", body_lower))
+        if n >= 3: return "pass", "Outcome language found throughout."
+        return "warn", "Add clearer outcome statements to sections."
+
+    if check_id in ("mobile_readable",):
+        long = sum(1 for l in body.split("\n") if len(l) > 120)
+        if long > 5: return "warn", f"{long} long lines may cause scrolling on mobile."
+        return "pass", "Content appears mobile-friendly."
+
+    if check_id in ("has_warnings",):
+        if re.search(r"(⚠|warning|important|caution|note:)", body_lower):
+            return "pass", "Warnings or important notes are highlighted."
+        return "info", "No explicit warnings — check if any are needed."
+
+    if check_id in ("time_efficient",):
+        wc = stats.get("word_count", 0)
+        if wc <= 400: return "pass", f"Short article ({wc} words) — quick to complete."
+        if wc <= 800: return "warn", f"Medium article ({wc} words) — may take 2-4 minutes."
+        return "warn", f"Long article ({wc} words) — consider splitting."
+
+    if check_id in ("covers_prerequisites", "has_prerequisites"):
+        if re.search(r"(prerequisit|before you|you.ll need|require|make sure)", body_lower):
+            return "pass", "Prerequisites are mentioned."
+        return "warn", "No prerequisites section found."
+
+    if check_id in ("has_ig_considerations",):
+        if re.search(r"(governance|security|privacy|data protection|gdpr|ig\b)", body_lower):
+            return "pass", "IG considerations mentioned."
+        return "info", "No IG/security considerations found."
+
+    if check_id in ("has_role_clarity",):
+        if re.search(r"(admin|administrator|user|it team|manager|clinician)", body_lower):
+            return "pass", "Role references found."
+        return "warn", "Unclear who should perform these actions."
+
+    if check_id in ("version_context", "is_version_specific"):
+        if re.search(r"(version|v\d|update|new feature|recently)", body_lower):
+            return "pass", "Version or recency context provided."
+        return "info", "No version-specific context."
+
+    if check_id in ("has_troubleshooting", "has_error_guidance"):
+        if re.search(r"(troubleshoot|error|issue|problem|fix|resolv|can.t|won.t|fail)", body_lower):
+            return "pass", "Troubleshooting guidance included."
+        return "info", "No troubleshooting section found."
+
+    if check_id in ("has_technical_detail",):
+        if re.search(r"`[^`]+`", body) or re.search(r"```", body):
+            return "pass", "Technical detail / code references found."
+        return "warn", "No technical parameters or config detail found."
+
+    if check_id in ("has_examples",):
+        if re.search(r"(example|e\.g\.|for instance|such as|```)", body_lower):
+            return "pass", "Examples present."
+        return "warn", "No examples found — consider adding some."
+
+    if check_id in ("uses_active_voice",):
+        pc = stats.get("passive_count", 0)
+        if pc <= 2: return "pass", f"Mostly active voice ({pc} passive)."
+        if pc <= 5: return "warn", f"{pc} passive constructions — convert some."
+        return "fail", f"{pc} passive constructions — rewrite in active voice."
+
+    if check_id in ("addresses_user_directly",):
+        n = len(re.findall(r"\byou\b", body_lower))
+        if n >= 3: return "pass", f"Addresses the user directly ({n}× 'you')."
+        return "warn", "Doesn't directly address the reader — use 'you'."
+
+    if check_id in ("consistent_terminology",):
+        pairs = [("click","tap"),("select","choose"),("press","click"),("workspace","organisation")]
+        mixed = [f"'{a}'/'{b}'" for a,b in pairs if a in body_lower and b in body_lower]
+        if mixed: return "warn", f"Mixed terminology: {', '.join(mixed[:3])}."
+        return "pass", "Terminology appears consistent."
+
+    if check_id in ("has_clear_cta",):
+        if re.search(r"(next step|you can now|go to|navigate to|click|select)", body_lower):
+            return "pass", "Clear calls to action found."
+        return "warn", "No clear next-action prompts found."
+
+    if check_id in ("positive_framing",):
+        neg = len(re.findall(r"\b(don.t|do not|never|avoid|cannot|can.t)\b", body_lower))
+        pos = len(re.findall(r"\b(you can|to do this|simply|just)\b", body_lower))
+        if neg > pos and neg > 3: return "warn", f"More negative ({neg}) than positive ({pos}) framing."
+        return "pass", "Positive framing used."
+
+    if check_id in ("images_have_alt",):
+        no_alt = structure.get("images_no_alt", 0)
+        total = structure.get("images_total", 0)
+        if total == 0: return "pass", "No images to check."
+        if no_alt == 0: return "pass", f"All {total} images have alt text."
+        return "fail", f"{no_alt}/{total} images missing alt text."
+
+    if check_id in ("heading_hierarchy",):
+        issues = structure.get("hierarchy_issues", [])
+        if not issues: return "pass", "Heading hierarchy is correct."
+        return "fail", f"{len(issues)} hierarchy issue(s): {issues[0]}"
+
+    if check_id in ("links_are_descriptive",):
+        vague = structure.get("vague_links", [])
+        if not vague: return "pass", "All links have descriptive text."
+        return "fail", f"{len(vague)} link(s) with vague text ('{vague[0]}')."
+
+    if check_id in ("has_consistent_formatting",):
+        mixed = bool(re.search(r"^[-*]\s", body, re.M)) and bool(re.search(r"^\d+\.\s", body, re.M))
+        if mixed: return "warn", "Mixed bullet and numbered lists."
+        return "pass", "Formatting appears consistent."
+
+    if check_id in ("is_screen_reader_friendly",):
+        issues = structure.get("images_no_alt", 0) + len(structure.get("hierarchy_issues", []))
+        if issues == 0: return "pass", "Should work well with screen readers."
+        return "warn", f"{issues} potential screen reader issue(s)."
+
+    if check_id in ("no_orphan_content",):
+        lines = body.strip().split("\n")
+        for i, line in enumerate(lines):
+            if re.match(r"^#{1,6}\s", line):
+                if i > 5: return "warn", f"{i} lines before first heading may be orphaned."
+                break
+        return "pass", "All content is under headings."
+
+    return "info", f"'{check_id}' not automated — manual review needed."
+
+
 # ── Scoring ───────────────────────────────────────────────────
 
 def compute_score(stats: dict, structure: dict, profile: dict) -> int:
@@ -414,6 +648,30 @@ tr:hover { background: var(--accent-light); }
 .rec-fix { font-size: 0.85rem; color: var(--text-sec); margin-top: 0.2rem; }
 .collection-header { margin: 2rem 0 0.5rem; padding: 0.5rem 0; border-bottom: 2px solid var(--accent);
     font-size: 1.1rem; font-weight: 600; color: var(--accent); }
+
+/* Persona tabs */
+.persona-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin: 1rem 0 0; }
+.persona-tab { padding: 0.5rem 1rem; cursor: pointer; font-size: 0.85rem; border: none;
+    background: none; color: var(--text-sec); border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.15s; }
+.persona-tab:hover { color: var(--accent); }
+.persona-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.persona-panel { display: none; padding: 1rem 0; }
+.persona-panel.active { display: block; }
+.persona-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.persona-header .icon { font-size: 1.3rem; }
+.persona-header .name { font-weight: 600; }
+.persona-header .role { color: var(--text-sec); font-size: 0.85rem; }
+.persona-perspective { font-size: 0.85rem; color: var(--text-sec); font-style: italic;
+    margin-bottom: 1rem; padding: 0.5rem 0.75rem; background: white; border-radius: 6px;
+    border-left: 3px solid var(--accent); }
+.check-grid { display: grid; gap: 0.4rem; }
+.check-row { display: flex; align-items: start; gap: 0.5rem; font-size: 0.88rem; padding: 0.3rem 0; }
+.check-icon { flex-shrink: 0; width: 1.2rem; text-align: center; }
+.check-pass .check-icon { color: var(--good); }
+.check-warn .check-icon { color: var(--warn); }
+.check-fail .check-icon { color: var(--bad); }
+.check-info .check-icon { color: #60a5fa; }
 @media (max-width: 768px) {
     .detail-content { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr 1fr; }
@@ -472,6 +730,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 tbody.appendChild(row);
                 tbody.appendChild(row.nextElementSibling);
             });
+        });
+    });
+
+    // Persona tabs
+    document.querySelectorAll('.persona-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const container = tab.closest('.persona-reviews');
+            container.querySelectorAll('.persona-tab').forEach(t => t.classList.remove('active'));
+            container.querySelectorAll('.persona-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            container.querySelector('#' + tab.dataset.panel).classList.add('active');
         });
     });
 });
@@ -533,7 +803,7 @@ def generate_report(results: list[dict], output_path: Path):
             </tr>"""
 
             # Detail panel
-            if not empty and recs:
+            if not empty:
                 rec_items = ""
                 for rec in recs:
                     rec_items += f"""<li>
@@ -542,6 +812,49 @@ def generate_report(results: list[dict], output_path: Path):
                         {rec['issue']}
                         <div class="rec-fix">💡 {rec['fix']}</div>
                     </li>"""
+
+                # Persona review tabs
+                persona_reviews = r.get("persona_reviews", {})
+                persona_html = ""
+                if persona_reviews:
+                    uid = r['file'].replace('.', '_')
+                    tabs = ""
+                    panels = ""
+                    first = True
+                    for pid, prev in persona_reviews.items():
+                        p = prev["persona"]
+                        findings = prev["findings"]
+                        active = "active" if first else ""
+                        panel_id = f"p_{uid}_{pid}"
+                        tabs += f'<button class="persona-tab {active}" data-panel="{panel_id}">{p["icon"]} {p["name"].split()[0]}</button>'
+
+                        status_icons = {"pass": "✅", "warn": "⚠️", "fail": "❌", "info": "ℹ️"}
+                        check_rows = ""
+                        pass_count = sum(1 for f_ in findings if f_["status"] == "pass")
+                        warn_count = sum(1 for f_ in findings if f_["status"] == "warn")
+                        fail_count = sum(1 for f_ in findings if f_["status"] == "fail")
+
+                        for f_ in findings:
+                            icon = status_icons.get(f_["status"], "•")
+                            check_rows += f'<div class="check-row check-{f_["status"]}"><span class="check-icon">{icon}</span><span>{f_["note"]}</span></div>'
+
+                        summary_line = f'<span style="color:var(--good)">{pass_count}✓</span>'
+                        if warn_count: summary_line += f' <span style="color:var(--warn)">{warn_count}⚠</span>'
+                        if fail_count: summary_line += f' <span style="color:var(--bad)">{fail_count}✗</span>'
+
+                        panels += f'''<div class="persona-panel {active}" id="{panel_id}">
+                            <div class="persona-header">
+                                <span class="icon">{p["icon"]}</span>
+                                <span class="name">{p["name"]}</span>
+                                <span class="role">— {p["role"]}</span>
+                                <span style="margin-left:auto;font-size:0.85rem">{summary_line}</span>
+                            </div>
+                            <div class="persona-perspective">{p["perspective"]}</div>
+                            <div class="check-grid">{check_rows}</div>
+                        </div>'''
+                        first = False
+
+                    persona_html = f'<div class="persona-reviews"><h4>Persona Reviews</h4><div class="persona-tabs">{tabs}</div>{panels}</div>'
 
                 detail = f"""<tr class="detail-panel"><td colspan="7">
                     <div class="detail-content">
@@ -560,12 +873,13 @@ def generate_report(results: list[dict], output_path: Path):
                         </div>
                         <div>
                             <h4>Recommendations ({len(recs)})</h4>
-                            <ul class="rec-list">{rec_items}</ul>
+                            <ul class="rec-list">{rec_items if recs else '<li><em>None — looking good!</em></li>'}</ul>
                         </div>
                     </div>
+                    {persona_html}
                 </td></tr>"""
             else:
-                detail = '<tr class="detail-panel"><td colspan="7"><em>No issues — document looks good!</em></td></tr>'
+                detail = '<tr class="detail-panel"><td colspan="7"><em>Empty document — no analysis possible.</em></td></tr>'
 
             table_rows.append(row + detail)
 
@@ -653,6 +967,8 @@ def main():
                         help="Directory containing .md files")
     parser.add_argument("--output", default="site/readability-report.html",
                         help="Output HTML report path")
+    parser.add_argument("--personas", default="personas.json",
+                        help="Path to reviewer personas JSON file")
     args = parser.parse_args()
 
     md_dir = Path(args.input_dir)
@@ -662,6 +978,13 @@ def main():
 
     md_files = sorted(md_dir.glob("*.md"))
     print(f"Found {len(md_files)} markdown files in {md_dir}")
+
+    # Load personas
+    personas = load_personas(args.personas)
+    if personas:
+        print(f"Loaded {len(personas)} reviewer personas: {', '.join(p['name'] for p in personas)}")
+    else:
+        print("No personas loaded — skipping persona reviews")
 
     results = []
     for i, f in enumerate(md_files):
@@ -678,6 +1001,12 @@ def main():
         score = compute_score(stats, structure, profile)
         badge = score_badge(score)
 
+        # Run persona reviews
+        p_reviews = {}
+        for persona in personas:
+            findings = persona_review(persona, stats, structure, body)
+            p_reviews[persona["id"]] = {"persona": persona, "findings": findings}
+
         results.append({
             "file": f.name,
             "meta": meta,
@@ -686,6 +1015,7 @@ def main():
             "recommendations": recs,
             "score": score,
             "badge": badge,
+            "persona_reviews": p_reviews,
         })
 
         if (i + 1) % 50 == 0:
