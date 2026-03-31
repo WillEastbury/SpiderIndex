@@ -59,6 +59,9 @@ def build_site_index(markdown_dir: Path):
     global site_index, all_articles, md_dir
     md_dir = markdown_dir
 
+    # Track which files are in subcollections to avoid duplicating into _articles
+    filed_in_sub = set()
+
     for f in sorted(markdown_dir.glob("*.md")):
         raw = f.read_text(encoding="utf-8")
         meta, _ = parse_frontmatter(raw)
@@ -71,12 +74,24 @@ def build_site_index(markdown_dir: Path):
 
         if col not in site_index:
             site_index[col] = {"_articles": []}
+
         if sub:
             if sub not in site_index[col]:
                 site_index[col][sub] = []
-            site_index[col][sub].append(entry)
+            # Deduplicate within subcollection by file key
+            existing = {a["file"] for a in site_index[col][sub]}
+            if f.stem not in existing:
+                site_index[col][sub].append(entry)
+            filed_in_sub.add((col, f.stem))
         else:
             site_index[col]["_articles"].append(entry)
+
+    # Remove any _articles entries that also exist in a subcollection
+    for col_name, col_data in site_index.items():
+        col_data["_articles"] = [
+            a for a in col_data["_articles"]
+            if (col_name, a["file"]) not in filed_in_sub
+        ]
 
     total = len(all_articles)
     cols = len(site_index)
@@ -309,6 +324,9 @@ def article(file_id: str):
     engine = md_lib.Markdown(extensions=["extra", "sane_lists"])
     html_body = engine.convert(body_md)
 
+    # Strip the first h1 from rendered markdown (we add our own in the template)
+    html_body = re.sub(r"<h1[^>]*>.*?</h1>\s*", "", html_body, count=1, flags=re.DOTALL)
+
     # Build TOC
     toc_items = []
     def inject_ids(m):
@@ -333,8 +351,8 @@ def article(file_id: str):
             col_slug = slugify(col)
             items = ""
             for a in related:
-                cur = "current" if a["file"] == file_id else ""
-                items += f'<li class="nav-item {cur}"><a class="nav-link py-1" href="/article/{a["file"]}">{a["title"][:40]}</a></li>'
+                active = " active" if a["file"] == file_id else ""
+                items += f'<li class="nav-item"><a class="nav-link py-1{active}" href="/article/{a["file"]}">{a["title"][:40]}</a></li>'
             col_nav = f'<div class="col-nav-hc"><p class="sidebar-heading mb-2"><a href="/browse/{col_slug}" class="text-decoration-none text-muted">{sub or col}</a></p><ul class="nav flex-column">{items}</ul></div>'
 
     sidebar = f'<div class="sidebar-hc">{toc}{col_nav}</div>'
