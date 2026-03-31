@@ -37,11 +37,12 @@ def search(q: str = Query(..., min_length=2), n: int = Query(10, ge=1, le=50)):
     results = collection.query(query_texts=[q], n_results=n, include=["documents", "metadatas", "distances"])
 
     items = []
-    seen_titles = set()
     for doc, meta, dist in zip(results["documents"][0], results["metadatas"][0], results["distances"][0]):
-        # Deduplicate by title (keep best chunk per article)
         title = meta.get("title", "Untitled")
         relevance = round((1 - dist) * 100, 1)
+
+        if relevance < 25:
+            continue
 
         items.append({
             "title": title,
