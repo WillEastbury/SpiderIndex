@@ -1,0 +1,231 @@
+/*
+ * custom.css — Brand override layer for Bootstrap + Bootswatch
+ *
+ * This file is auto-loaded by the server. Colours and layout values
+ * come from theme.yaml and are injected as CSS custom properties.
+ *
+ * The original Intercom site's design tokens are mapped here.
+ */
+
+/* ── CSS custom properties (populated from theme.yaml) ────── */
+:root {
+  --hc-header-bg: rgb(11, 136, 136);
+  --hc-header-color: #fff;
+  --hc-primary: hsl(240, 20%, 28%);
+  --hc-body-bg: #fff;
+  --hc-body-color: #1a1a1a;
+  --hc-text-secondary: #737373;
+  --hc-border: rgb(230, 230, 230);
+  --hc-card-bg: rgb(246, 246, 248);
+  --hc-card-border: rgb(230, 230, 230);
+  --hc-footer-bg: rgb(233, 250, 247);
+  --hc-footer-color: hsl(240, 20%, 28%);
+  --hc-footer-border: rgb(191, 241, 232);
+  --hc-toc-active-border: #737373;
+  --hc-toc-inactive: #737373;
+  --hc-card-radius: 8px;
+  --hc-card-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --hc-search-radius: 10px;
+  --hc-max-width: 1100px;
+  --hc-toc-width: 260px;
+}
+
+/* ── Site header (matches original teal bar) ─────────────── */
+.navbar-hc {
+  background-color: var(--hc-header-bg) !important;
+}
+.navbar-hc .navbar-brand,
+.navbar-hc .nav-link {
+  color: var(--hc-header-color) !important;
+}
+.navbar-hc .nav-link:hover {
+  opacity: 0.8;
+}
+
+/* ── Hero section ─────────────────────────────────────────── */
+.hero-hc {
+  background-color: var(--hc-header-bg);
+  color: var(--hc-header-color);
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+.hero-hc h1 { margin-bottom: 0.3rem; }
+.hero-hc p { opacity: 0.85; }
+.hero-hc .form-control {
+  max-width: 600px;
+  margin: 1.25rem auto 0;
+  border-radius: var(--hc-search-radius);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ── Collection cards ─────────────────────────────────────── */
+.card-hc {
+  background: var(--hc-card-bg);
+  border: 1px solid var(--hc-card-border);
+  border-radius: var(--hc-card-radius);
+  box-shadow: var(--hc-card-shadow);
+  transition: all 0.15s ease;
+}
+.card-hc:hover {
+  border-color: var(--hc-header-bg);
+  box-shadow: 0 4px 12px rgba(11, 136, 136, 0.12);
+  transform: translateY(-2px);
+}
+.card-hc .card-title { color: var(--hc-primary); }
+.card-hc .text-muted { color: var(--hc-text-secondary) !important; }
+
+/* ── Browse sidebar ───────────────────────────────────────── */
+.sidebar-hc {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding-right: 1rem;
+  border-right: 2px solid var(--hc-border);
+  min-width: var(--hc-toc-width);
+  max-width: var(--hc-toc-width);
+}
+.sidebar-hc .nav-link {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.88rem;
+  color: var(--hc-toc-inactive);
+  border-left: 3px solid transparent;
+  border-radius: 0 4px 4px 0;
+}
+.sidebar-hc .nav-link:hover,
+.sidebar-hc .nav-link.active {
+  color: var(--hc-header-bg);
+  border-left-color: var(--hc-header-bg);
+  background: rgba(11, 136, 136, 0.06);
+}
+.sidebar-hc .sidebar-heading {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--hc-text-secondary);
+}
+.sidebar-hc .sub-heading {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--hc-body-color);
+  margin-top: 0.75rem;
+  padding-left: 0.6rem;
+}
+
+/* ── Article TOC ──────────────────────────────────────────── */
+.article-toc .nav-link {
+  font-size: 0.85rem;
+  color: var(--hc-toc-inactive);
+  padding: 0.25rem 0.5rem;
+  border-left: 3px solid transparent;
+}
+.article-toc .nav-link:hover,
+.article-toc .nav-link.active {
+  color: var(--hc-header-bg);
+  border-left-color: var(--hc-header-bg);
+  background: rgba(11, 136, 136, 0.06);
+}
+.article-toc .toc-h3 .nav-link {
+  padding-left: 1.25rem;
+  font-size: 0.82rem;
+}
+.col-nav-hc {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--hc-border);
+}
+.col-nav-hc .nav-link { font-size: 0.82rem; }
+.col-nav-hc .nav-item.current .nav-link {
+  color: var(--hc-header-bg);
+  font-weight: 600;
+}
+
+/* ── Article body ─────────────────────────────────────────── */
+.article-body h2 {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--hc-border);
+}
+.article-body h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--hc-card-radius);
+  border: 1px solid var(--hc-border);
+  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.article-body a { color: var(--hc-primary); }
+.article-body blockquote {
+  border-left: 3px solid var(--hc-header-bg);
+  background: rgba(11, 136, 136, 0.04);
+  border-radius: 0 6px 6px 0;
+}
+
+/* ── Meta banner ──────────────────────────────────────────── */
+.meta-banner-hc {
+  background: var(--hc-footer-bg);
+  border: 1px solid var(--hc-footer-border);
+  border-radius: var(--hc-card-radius);
+}
+
+/* ── Article list ─────────────────────────────────────────── */
+.article-list-hc .list-group-item:hover {
+  background: rgba(11, 136, 136, 0.04);
+}
+.article-list-hc a { color: var(--hc-body-color); text-decoration: none; }
+.article-list-hc a:hover { color: var(--hc-header-bg); }
+
+/* ── Sub-section headings ─────────────────────────────────── */
+.sub-section-hc h2 {
+  color: var(--hc-primary);
+  border-bottom: 1px solid var(--hc-border);
+  padding-bottom: 0.4rem;
+}
+
+/* ── Search results ───────────────────────────────────────── */
+.search-result-hc {
+  border: 1px solid var(--hc-card-border);
+  border-radius: var(--hc-card-radius);
+  transition: all 0.15s;
+}
+.search-result-hc:hover {
+  border-color: var(--hc-header-bg);
+  box-shadow: 0 2px 8px rgba(11, 136, 136, 0.1);
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.footer-hc {
+  background: var(--hc-footer-bg);
+  border-top: 1px solid var(--hc-footer-border);
+  color: var(--hc-footer-color);
+}
+
+/* ── Breadcrumb ───────────────────────────────────────────── */
+.breadcrumb-hc {
+  background: #fafafa;
+  border-bottom: 1px solid var(--hc-border);
+}
+.breadcrumb-hc a { color: var(--hc-header-bg); }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar-hc {
+    position: static;
+    max-width: 100%;
+    min-width: 100%;
+    border-right: none;
+    border-bottom: 2px solid var(--hc-border);
+    padding: 0 0 1rem;
+    margin-bottom: 1rem;
+    max-height: none;
+  }
+}
+@media print {
+  .navbar-hc, .sidebar-hc, .breadcrumb-hc,
+  .col-nav-hc, .hero-hc { display: none !important; }
+}

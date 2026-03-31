@@ -1,0 +1,60 @@
+# ── Help Centre Theme Configuration ──────────────────────────
+# Controls the look and feel of the entire site.
+# Edit values here — no code changes needed.
+#
+# CSS is handled by Bootstrap 5 + Bootswatch + this override layer.
+# Change bootswatch_theme to any Bootswatch theme name:
+#   cerulean, cosmo, cyborg, darkly, flatly, journal, litera,
+#   lumen, lux, materia, minty, morph, pulse, quartz, sandstone,
+#   simplex, sketchy, slate, solar, spacelab, superhero, united, vapor, yeti, zephyr
+#
+# Then use css_overrides for brand-specific customisation.
+
+# ── Branding ──
+site_name: "Help Centre"
+logo_url: ""                            # URL to logo image (empty = text only)
+favicon_url: ""                         # URL to favicon
+footer_text: ""                         # Footer text (empty = hide footer)
+
+# ── Bootstrap / Bootswatch ──
+bootswatch_theme: "flatly"              # Bootswatch theme name (or "default" for vanilla Bootstrap)
+bootstrap_version: "5.3.3"              # Bootstrap version
+
+# ── Colour overrides (applied on top of Bootswatch) ──
+# These map directly to the original Intercom site's CSS variables.
+# Leave empty to use the Bootswatch theme defaults.
+colors:
+  header_bg: "rgb(11, 136, 136)"        # Original: --header-bg
+  header_color: "hsl(0, 0%, 100%)"      # Original: --header-color
+  primary: "hsl(240, 20%, 28%)"         # Original: --primary-color
+  body_bg: "rgb(255, 255, 255)"         # Original: --body-bg
+  body_color: "#1a1a1a"                 # Original: --body-primary-color
+  text_secondary: "#737373"             # Original: --body-secondary-color
+  border: "rgb(230, 230, 230)"          # Original: --body-border
+  card_bg: "rgb(246, 246, 248)"         # Original: --collection-card-bg
+  card_border: "rgb(230, 230, 230)"     # Original: --card-border-color
+  footer_bg: "rgb(233, 250, 247)"       # Original: --footer-bg
+  footer_color: "hsl(240, 20%, 28%)"    # Original: --footer-color
+  footer_border: "rgb(191, 241, 232)"   # Original: --footer-border
+  link_color: "hsl(240, 20%, 28%)"      # Original: --primary-color
+  toc_active_border: "#737373"          # Original: --body-toc-active-border
+  toc_inactive: "#737373"               # Original: --body-toc-inactive-color
+  search_bar_radius: "10px"             # Original: --search-bar-border-radius
+
+# ── Typography ──
+font_primary: 'system-ui, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif'
+font_secondary: 'system-ui, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif'
+
+# ── Layout ──
+max_width: "1100px"
+toc_width: "260px"
+card_radius: "8px"                      # Original: --card-border-radius
+card_shadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)"  # Original: --card-shadow
+
+# ── Feature toggles ──
+show_meta_banner: true
+show_reading_time: true
+show_source_link: true
+show_breadcrumbs: true
+show_collection_nav: true
+show_search_in_header: true
