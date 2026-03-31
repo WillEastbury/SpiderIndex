@@ -78,6 +78,18 @@ def build_site_index(markdown_dir: Path):
         else:
             site_index[col]["_articles"].append(entry)
 
+    # Deduplicate: remove from _articles any article that also appears
+    # in a named subcollection (prefer the more specific placement)
+    for col, col_data in site_index.items():
+        sub_files = set()
+        for key, articles in col_data.items():
+            if key != "_articles":
+                sub_files.update(a["file"] for a in articles)
+        if sub_files:
+            col_data["_articles"] = [
+                a for a in col_data["_articles"] if a["file"] not in sub_files
+            ]
+
     total = len(all_articles)
     cols = len(site_index)
     print(f"Built site index: {total} articles in {cols} collections")
@@ -253,6 +265,24 @@ def browse(col_slug: str):
 
     subs = {k: v for k, v in col_data.items() if k != "_articles"}
     top = col_data.get("_articles", [])
+
+    # Deduplicate: remove from top any article that appears in a subcollection
+    sub_files = set()
+    for arts in subs.values():
+        sub_files.update(a["file"] for a in arts)
+    top = [a for a in top if a["file"] not in sub_files]
+
+    # Deduplicate within subcollections by file key (keep first occurrence)
+    seen_files = set(a["file"] for a in top)
+    deduped_subs = {}
+    for sn, arts in sorted(subs.items()):
+        unique = []
+        for a in arts:
+            if a["file"] not in seen_files:
+                seen_files.add(a["file"])
+                unique.append(a)
+        deduped_subs[sn] = unique
+    subs = deduped_subs
 
     # Sidebar
     sb = '<p class="sidebar-heading mb-2">Navigation</p><ul class="nav flex-column">'

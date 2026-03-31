@@ -528,6 +528,8 @@ def spider(output_dir: str, single_collection: str = None):
             "subcollections": [],
         }
 
+        seen_in_subcollections = set()
+
         for sub in subcollections:
             sub_url = sub["url"]
             sub_name = collection_name_from_url(sub_url)
@@ -542,15 +544,19 @@ def spider(output_dir: str, single_collection: str = None):
             for a in sub_articles:
                 a["subcollection"] = sub_name
 
-            # Deduplicate against top-level articles
-            existing_urls = {a["url"] for a in top_articles}
-            new_articles = [a for a in sub_articles if a["url"] not in existing_urls]
+            # Deduplicate against other subcollections
+            new_articles = [a for a in sub_articles if a["url"] not in seen_in_subcollections]
+            for a in new_articles:
+                seen_in_subcollections.add(a["url"])
 
             col_entry["subcollections"].append({
                 "name": sub_name,
                 "url": sub_url,
                 "articles": new_articles,
             })
+
+        # Remove top-level articles that appear in any subcollection
+        col_entry["articles"] = [a for a in top_articles if a["url"] not in seen_in_subcollections]
 
         site_structure.append(col_entry)
 
